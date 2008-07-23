@@ -3,9 +3,12 @@ module Salesforce
   #Implements the connection to the SalesForce server.
   class Session
     
-    # The good stuff
     def accounts
       CollectionProxy.new self, Salesforce::Account
+    end
+    
+    def leads
+      CollectionProxy.new self, Salesforce::Lead
     end
     
     
