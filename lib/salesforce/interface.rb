@@ -39,7 +39,7 @@ module Salesforce
     end
 
     def salesforce_authentication_string
-      salesforce_password + salesforce_api_key
+      (salesforce_password || '') + (salesforce_api_key || '')
     end
     
     def salesforce_soap_url() 'https://www.salesforce.com/services/Soap/u/11.0' end
