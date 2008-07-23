@@ -40,7 +40,20 @@ describe Salesforce::Base, 'parse results into collection' do
     collection.size.should == 6
   end
   
-  it 'should create a collection which is not done'
+  it 'should create a collection which is not done' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/leads.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    
+    collection = Salesforce::Lead.find session, :select=>[:id, :firstname, :lastname]
+    collection.class.should == Salesforce::Collection
+    collection.should_not be_done
+    collection.locator.should_not be_nil
+    collection.total_results.should == 2
+    collection.size.should == 2
+  end
 end
 
 describe Salesforce::Base, 'initializing from a hash' do

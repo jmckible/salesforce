@@ -22,6 +22,9 @@ module Salesforce
         response.queryResponse.result.records.each { |r| collection << initialize_from_hash(r) }
       end
       
+      collection.done = false if response.queryResponse.result.done == 'false'
+      collection.locator = response.queryResponse.result[:queryLocator] if response.queryResponse.result[:queryLocator]
+      
       collection
     end
     
@@ -33,6 +36,8 @@ module Salesforce
     def self.initialize_from_hash(hash)
       if hash[:type] == 'Account'
         object = Salesforce::Account.new
+      elsif hash[:type] == 'Lead'
+        object = Salesforce::Lead.new
       end
       hash.each do |pair|
         unless pair[0] == :type || pair[0] == :Id
