@@ -1,5 +1,20 @@
 require File.dirname(__FILE__) + '/helper'
 
+describe Person, 'establishing a connection' do
+  it 'should authenticate and set the session' do
+    person = Person.new :salesforce_email=>ENV['SF_EMAIL'], :salesforce_password=>ENV['SF_PASSWORD'], :salesforce_api_key=>ENV['SF_API_KEY']
+    session = mock 'session', :login=>true
+    Salesforce::Session.stub!(:new).and_return(session)
+
+    session.should_receive(:login).with(person.salesforce_email, person.salesforce_authentication_string).once
+    person.should_receive(:save_salesforce_session)
+    
+    person.acquire_salesforce_session
+    person.salesforce_session.should == session
+    person.salesforce.should == session
+  end
+end
+
 ###############################################################################
 #                      G E N E R I C     I N T E R F A C E                    #
 ###############################################################################

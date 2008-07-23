@@ -19,7 +19,7 @@ module Salesforce
       if collection.total_results == 1
         collection << initialize_from_hash(response.queryResponse.result.records)
       else
-        
+        response.queryResponse.result.records.each { |r| collection << initialize_from_hash(r) }
       end
       
       collection
