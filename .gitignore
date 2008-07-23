@@ -1,2 +1,3 @@
 salesforce.sqlite3.db
 spec/debug.log
+spec/live/salesforce.yml

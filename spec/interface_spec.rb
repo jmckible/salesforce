@@ -1,38 +1,11 @@
 require File.dirname(__FILE__) + '/helper'
 
 ###############################################################################
-#                                  A C Q U I R E                              #
-###############################################################################
-describe 'acquiring a session' do
-  before(:each) do
-    @person = Person.new
-  end
-  
-  it 'should raise an exception if cannot acquire' do
-    @person.stub!(:acquire_salesforce_session).and_return(false)
-    lambda { @person.salesforce }.should raise_error(Salesforce::UnableToConnect)
-  end
-  
-  it 'should return the session if can acquire' do
-    session = mock 'session'
-    @person.salesforce_session = session
-    @person.stub!(:acquire_salesforce_session).and_return(true)
-    @person.salesforce.should == session
-  end
-end
-
-###############################################################################
 #                      G E N E R I C     I N T E R F A C E                    #
 ###############################################################################
 describe Person, 'using generic class' do
   before(:each) do
     @person = Person.new
-  end
-  
-  it 'should use the default attributes' do
-    @person.salesforce_email.should    == ''
-    @person.salesforce_password.should == ''
-    @person.salesforce_api_key.should  == ''
   end
   
   it 'should use the default session persistance method' do

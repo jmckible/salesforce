@@ -175,7 +175,7 @@ module Salesforce
 
     #Turns method calls on this object into remote SOAP calls.
     def method_missing(method, *args)
-      raise Salesforce::InvalidParamenters unless args.size == 1 && [Hash, Array].include?(args[0].class)
+      raise Salesforce::InvalidParameters unless args.size == 1 && [Hash, Array].include?(args[0].class)
       call_remote method, args[0]
     end
 

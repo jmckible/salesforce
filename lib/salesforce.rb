@@ -17,5 +17,15 @@ module Salesforce
   end
 end
 
+require 'net/https'
+require 'uri'
+require 'zlib'
+require 'stringio'
+require 'rexml/document'
+require 'rexml/xpath'
+require 'rubygems'
+require 'builder'
+
 require 'salesforce/interface'
 require 'salesforce/session'
+require 'salesforce/soap_response'
