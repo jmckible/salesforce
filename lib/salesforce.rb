@@ -1,3 +1,21 @@
 $:.unshift(File.dirname(__FILE__)) unless $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
+module Salesforce
+  class SalesforceError < StandardError
+  end
+  
+  class InvalidCredentials < SalesforceError
+  end
+  
+  class InvalidSession < SalesforceError
+  end
+  
+  class UnableToConnect < SalesforceError
+  end
+  
+  class InvalidParameters < SalesforceError
+  end
+end
+
 require 'salesforce/interface'
+require 'salesforce/session'
