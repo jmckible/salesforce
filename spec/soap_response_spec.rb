@@ -19,7 +19,6 @@ describe Salesforce::SoapResponse, 'parsing' do
     account[:Id].first.should == '0017000000Mk5RKAAZ'
   end
   
-  
   it 'should build a response from many results' do
     xml = IO.read(File.dirname(__FILE__) + '/fixtures/accounts.xml')
     soap_response = Salesforce::SoapResponse.new xml
@@ -34,5 +33,18 @@ describe Salesforce::SoapResponse, 'parsing' do
     account[:Id].first.should == '0017000000Mk5RKAAZ'
   end
   
-  it 'should build a response from a result which is not done'
+  it 'should build a response from a result which is not done' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/leads.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    soap_response.queryResponse.result.done.should == 'false'
+    soap_response.queryResponse.result[:queryLocator].should_not be_nil
+    soap_response.queryResponse.result[:size].should == '2'
+    soap_response.queryResponse.result.records.size.should == 2
+    
+    account = soap_response.queryResponse.result.records.first
+    account[:type].should == 'Lead'
+    account[:FirstName].should == 'Joe'
+    account[:LastName].should == 'Bob'
+    account[:Id].first.should == '00Q7000000MnYrAEAV'
+  end
 end
