@@ -1,0 +1,3 @@
+salesforced provides an interface for accessing Salesforce. 
+
+Uses RForce
