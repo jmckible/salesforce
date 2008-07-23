@@ -26,6 +26,11 @@ require 'rexml/xpath'
 require 'rubygems'
 require 'builder'
 
+require 'salesforce/base'
+
+require 'salesforce/account'
+require 'salesforce/collection'
+require 'salesforce/collection_proxy'
 require 'salesforce/interface'
 require 'salesforce/session'
 require 'salesforce/soap_response'

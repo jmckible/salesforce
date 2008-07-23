@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+  <soapenv:Body>
+    <queryResponse>
+      <result xsi:type="QueryResult">
+        <done>true</done>
+        <queryLocator xsi:nil="true"/>
+        <records xsi:type="sf:sObject">
+          <sf:type>Account</sf:type>
+          <sf:Id>0017000000Mk5RKAAZ</sf:Id>
+          <sf:Id>0017000000Mk5RKAAZ</sf:Id>
+          <sf:Name>Express Logistics and Transport</sf:Name>
+        </records>
+        <records xsi:type="sf:sObject">
+          <sf:type>Account</sf:type>
+          <sf:Id>0017000000Mk5RDAAZ</sf:Id>
+          <sf:Id>0017000000Mk5RDAAZ</sf:Id>
+          <sf:Name>United Oil &amp; Gas, UK</sf:Name>
+        </records>
+        <records xsi:type="sf:sObject">
+          <sf:type>Account</sf:type>
+          <sf:Id>0017000000Mk5RFAAZ</sf:Id>
+          <sf:Id>0017000000Mk5RFAAZ</sf:Id>
+          <sf:Name>Edge Communications</sf:Name>
+        </records>
+        <records xsi:type="sf:sObject">
+          <sf:type>Account</sf:type>
+          <sf:Id>0017000000Mk5RGAAZ</sf:Id>
+          <sf:Id>0017000000Mk5RGAAZ</sf:Id>
+          <sf:Name>Burlington Textiles Corp of America</sf:Name>
+        </records>
+        <records xsi:type="sf:sObject">
+          <sf:type>Account</sf:type>
+          <sf:Id>0017000000Mk5RLAAZ</sf:Id>
+          <sf:Id>0017000000Mk5RLAAZ</sf:Id>
+          <sf:Name>University of Arizona</sf:Name>
+        </records>
+        <records xsi:type="sf:sObject">
+          <sf:type>Account</sf:type>
+          <sf:Id>0017000000Mk5RMAAZ</sf:Id>
+          <sf:Id>0017000000Mk5RMAAZ</sf:Id>
+          <sf:Name>United Oil &amp; Gas Corp.</sf:Name>
+        </records>
+        <size>6</size>
+      </result>
+    </queryResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

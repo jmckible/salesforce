@@ -2,6 +2,13 @@ module Salesforce
     
   #Implements the connection to the SalesForce server.
   class Session
+    
+    # The good stuff
+    def accounts
+      CollectionProxy.new self, Salesforce::Account
+    end
+    
+    
     DEFAULT_BATCH_SIZE = 20
     attr_accessor :batch_size, :url, :assignment_rule_id, :use_default_rule, :update_mru, :client_id, 
                   :trigger_user_email, :trigger_other_email, :trigger_auto_response_email, :session_id
