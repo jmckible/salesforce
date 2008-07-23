@@ -2,11 +2,11 @@ module Salesforce
   class Base
     attr_accessor :id
     
-    def self.find(session, *args)
-      options = args.last.is_a?(Hash) ? args.pop : {}
-      
-      case args.first
-      when :all then find_every(session, options)
+    def self.find(session, args)
+      if args.is_a?(String)
+        find_one session, args
+      else # Hash
+        find_every session, args
       end
     end
     

@@ -17,7 +17,7 @@ describe Salesforce::Base, 'parse results into collection' do
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
     session.stub!(:query).and_return(soap_response)
     
-    collection = Salesforce::Account.find session, :all, :select=>[:id, :name]
+    collection = Salesforce::Account.find session, :select=>[:id, :name]
     collection.class.should == Salesforce::Collection
     collection.should be_done
     collection.locator.should be_nil
@@ -32,7 +32,7 @@ describe Salesforce::Base, 'parse results into collection' do
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
     session.stub!(:query).and_return(soap_response)
     
-    collection = Salesforce::Account.find session, :all, :select=>[:id, :name]
+    collection = Salesforce::Account.find session, :select=>[:id, :name]
     collection.class.should == Salesforce::Collection
     collection.should be_done
     collection.locator.should be_nil
