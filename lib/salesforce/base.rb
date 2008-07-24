@@ -28,8 +28,11 @@ module Salesforce
     end
     
     def self.query_string(options={})
-      columns = (options[:select] || [:id]).join ', '
-      "select #{columns} from #{table_name}"
+      columns    = (options[:select] || [:id]).join ', '
+      conditions = options[:conditions]
+      base = "select #{columns} from #{table_name}"
+      base += " where #{conditions}" if conditions
+      base
     end
     
     def self.initialize_from_hash(hash)

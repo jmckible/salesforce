@@ -1,9 +1,10 @@
 require File.dirname(__FILE__) + '/helper'
 
 describe Salesforce::Base, 'query string' do
-  it 'should have a find all' do
+  it 'should parse options' do
     Salesforce::Base.query_string.should == "select id from Base"
     Salesforce::Base.query_string(:select=>[:id, :name]).should == "select id, name from Base"
+    Salesforce::Base.query_string(:conditions=>"id = 'id'").should == "select id from Base where id = 'id'"
   end
 end
 
