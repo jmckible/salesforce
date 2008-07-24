@@ -42,10 +42,9 @@ module Salesforce
       end
       hash.each do |pair|
         unless pair[0] == :type || pair[0] == :Id
-          attribute = pair[0].to_s.gsub(/::/, '/').
+          attribute = pair[0].to_s.tr("-", "_").
             gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
             gsub(/([a-z\d])([A-Z])/,'\1_\2').
-            tr("-", "_").
             downcase
           
           object.__send__ "#{attribute}=", pair[1]
