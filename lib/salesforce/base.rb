@@ -55,7 +55,10 @@ module Salesforce
       
         records = query_response.result.records
         records = [records] unless records.is_a?(Array)
-        records.each { |r| collection << initialize_from_hash(r) }.compact
+        records.each do |record| 
+          object = initialize_from_hash record
+          collection << object if object
+        end
   
         collection
       end

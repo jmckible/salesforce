@@ -161,4 +161,8 @@ describe Salesforce::Base, 'initializing from a hash' do
     account.name.should == 'name'
     account.id.should == 'id'
   end
+  
+  it 'should skip an unknown' do
+    Salesforce::Base.initialize_from_hash(:type=>'Unknown').should be_nil
+  end
 end
