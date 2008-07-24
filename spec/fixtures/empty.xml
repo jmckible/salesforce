@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding=\"UTF-8\"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <queryResponse>
+      <result xsi:type="QueryResult">
+        <done>true</done>
+        <queryLocator xsi:nil="true"/>
+        <size>0</size>
+      </result>
+    </queryResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

@@ -11,6 +11,10 @@ module Salesforce
       end
     end
     
+    def self.find_one(session, id)
+      find_every(session, :conditions=>"id = '#{id}'").first
+    end
+    
     def self.find_every(session, options)
       response = session.query :queryResponse=>query_string(options)
       
