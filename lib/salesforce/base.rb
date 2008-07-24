@@ -58,12 +58,8 @@ module Salesforce
         end
         hash.each do |pair|
           unless pair[0] == :type || pair[0] == :Id
-            attribute = pair[0].to_s.tr("-", "_").
-              gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-              gsub(/([a-z\d])([A-Z])/,'\1_\2').
-              downcase
-          
-            object.__send__("#{attribute}=", pair[1]) if object.respond_to?("#{attribute}=")
+            method = object.class.columns[pair[0]].to_s + '='
+            object.__send__(method, pair[1]) if object.respond_to? method
           end
         end
         object.id = hash[:Id].first
