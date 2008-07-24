@@ -80,4 +80,21 @@ describe Salesforce::SoapResponse, 'parsing' do
     lead[:Email].should == 'joe@bob.com'
     lead[:Id].first.should == '00Q7000000MnYrAEAV'
   end
+  
+  it 'should build a response from many results and sub objects' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/contacts.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    soap_response.queryResponse.result.done.should == 'true'
+    soap_response.queryResponse.result[:queryLocator].should be_nil
+    soap_response.queryResponse.result[:size].should == '2'
+    soap_response.queryResponse.result.records.size.should == 2
+    
+    contact = soap_response.queryResponse.result.records.first
+    contact[:type].should == 'Contact'
+    contact[:FirstName].should == 'Stella'
+    contact[:LastName].should == 'Pavlova'
+    contact[:Email].should == 'stella@pavlova.com'
+    contact[:Id].first.should == '0037000000UQb6wAAD'
+    contact[:AccountId].should == '0017000000Mk5RMAAZ'
+  end
 end

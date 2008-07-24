@@ -84,13 +84,16 @@ module Salesforce
           object = Salesforce::Account.new
         elsif hash[:type] == 'Lead'
           object = Salesforce::Lead.new
+        elsif hash[:type] == 'Contact'
+          object = Salesforce::Contact.new
         else
           return nil
         end
         hash.each do |pair|
           unless pair[0] == :type || pair[0] == :Id
             method = object.class.columns[pair[0]].to_s + '='
-            object.__send__(method, pair[1]) if object.respond_to? method
+            value = pair[1].is_a?(Hash) ? initialize_from_hash(pair[1]) : pair[1]
+            object.__send__(method, value) if object.respond_to? method
           end
         end
         object.id = hash[:Id].first

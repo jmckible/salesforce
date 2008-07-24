@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+  <soapenv:Body>
+    <queryResponse>
+      <result xsi:type="QueryResult">
+        <done>true</done>
+        <queryLocator xsi:nil="true"/>
+        <records xsi:type="sf:sObject">
+          <sf:type>Contact</sf:type>
+          <sf:Id>0037000000UQb6wAAD</sf:Id>
+          <sf:Id>0037000000UQb6wAAD</sf:Id>
+          <sf:FirstName>Stella</sf:FirstName>
+          <sf:AccountId>0017000000Mk5RMAAZ</sf:AccountId>
+          <sf:LastName>Pavlova</sf:LastName>
+          <sf:Email>stella@pavlova.com</sf:Email>
+        </records>
+        <records xsi:type="sf:sObject">
+          <sf:type>Contact</sf:type>
+          <sf:Id>0037000000UQb6xAAD</sf:Id>
+          <sf:Id>0037000000UQb6xAAD</sf:Id>
+          <sf:FirstName>Lauren</sf:FirstName>
+          <sf:AccountId>0017000000Mk5RMAAZ</sf:AccountId>
+          <sf:LastName>Boyle</sf:LastName>
+          <sf:Email>lauren@boyle.com</sf:Email>
+        </records>
+        <size>2</size>
+      </result>
+    </queryResponse>
+  </soapenv:Body>
+</soapenv:Envelope>
