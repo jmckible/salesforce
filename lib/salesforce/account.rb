@@ -1,5 +1,5 @@
 module Salesforce
   class Account < Base
-    attr_accessor :id, :name
+    attr_accessor :name
   end
 end
