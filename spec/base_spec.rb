@@ -32,7 +32,7 @@ describe Salesforce::Base, 'parse results into collection' do
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
     session.stub!(:query).and_return(soap_response)
     
-    lambda { Salesforce::Account.find session, :select=>[:id, :name] }.should raise_error(Salesforce::InvalidParameters)
+    lambda { Salesforce::Account.find session, :all }.should raise_error(Salesforce::InvalidParameters)
   end
   
   it 'should create an empty collection' do
@@ -42,7 +42,7 @@ describe Salesforce::Base, 'parse results into collection' do
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
     session.stub!(:query).and_return(soap_response)
     
-    collection = Salesforce::Account.find session, :select=>[:id, :name]
+    collection = Salesforce::Account.find session, :all
     collection.class.should == Salesforce::Collection
     collection.should be_done
     collection.locator.should be_nil
@@ -57,7 +57,7 @@ describe Salesforce::Base, 'parse results into collection' do
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
     session.stub!(:query).and_return(soap_response)
     
-    collection = Salesforce::Account.find session, :select=>[:id, :name]
+    collection = Salesforce::Account.find session, :all
     collection.class.should == Salesforce::Collection
     collection.should be_done
     collection.locator.should be_nil
@@ -72,7 +72,7 @@ describe Salesforce::Base, 'parse results into collection' do
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
     session.stub!(:query).and_return(soap_response)
     
-    collection = Salesforce::Account.find session, :select=>[:id, :name]
+    collection = Salesforce::Account.find session, :all
     collection.class.should == Salesforce::Collection
     collection.should be_done
     collection.locator.should be_nil
@@ -87,7 +87,7 @@ describe Salesforce::Base, 'parse results into collection' do
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
     session.stub!(:query).and_return(soap_response)
     
-    collection = Salesforce::Lead.find session, :select=>[:id, :firstname, :lastname]
+    collection = Salesforce::Lead.find session, :all
     collection.class.should == Salesforce::Collection
     collection.should_not be_done
     collection.locator.should_not be_nil

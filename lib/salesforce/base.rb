@@ -8,16 +8,27 @@ module Salesforce
         {:Id=>:id}
       end
       
-      def find(session, args)
-        if args.is_a?(String)
-          find_one session, args
-        else # Hash
-          find_every session, args
+      def find(session, *args)
+        options = args.last.is_a?(Hash) ? pop : {}
+        
+        case args.first
+          when :first then find_initial session, options
+          when :last  then find_last    session, options
+          when :all   then find_every   session, options
+          else             find_from_id session, args.first
         end
       end
-    
-      def find_one(session, id)
+      
+      def find_from_id(session, id)
         find_every(session, :conditions=>"id = '#{id}'").first
+      end
+      
+      def find_initial(session, options)
+        find_every(session, options).first
+      end
+      
+      def find_last(session, options)
+        find_every(session, options).last
       end
     
       def find_every(session, options)
