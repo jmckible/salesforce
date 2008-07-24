@@ -15,14 +15,12 @@ module Salesforce
       response = session.query :queryResponse=>query_string(options)
       
       collection = Salesforce::Collection.new 
+      
+      records = response.queryResponse.result.records
+      records = [records] unless records.is_a?(Array)
+      records.each { |r| collection << initialize_from_hash(r) }
+      
       collection.total_results = response.queryResponse.result[:size].to_i
-      
-      if collection.total_results == 1
-        collection << initialize_from_hash(response.queryResponse.result.records)
-      else
-        response.queryResponse.result.records.each { |r| collection << initialize_from_hash(r) }
-      end
-      
       collection.done = false if response.queryResponse.result.done == 'false'
       collection.locator = response.queryResponse.result[:queryLocator] if response.queryResponse.result[:queryLocator]
       
