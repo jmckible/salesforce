@@ -55,7 +55,7 @@ module Salesforce
       
         records = query_response.result.records
         records = [records] unless records.is_a?(Array)
-        records.each { |r| collection << initialize_from_hash(r) }
+        records.each { |r| collection << initialize_from_hash(r) }.compact
   
         collection
       end
@@ -75,6 +75,8 @@ module Salesforce
           object = Salesforce::Account.new
         elsif hash[:type] == 'Lead'
           object = Salesforce::Lead.new
+        else
+          return nil
         end
         hash.each do |pair|
           unless pair[0] == :type || pair[0] == :Id
