@@ -1,6 +1,28 @@
 require File.dirname(__FILE__) + '/helper'
 
 describe Salesforce::SoapResponse, 'parsing' do
+  it 'should handle a valid query locator' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/locator.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    soap_response.queryMoreResponse.result.done.should == 'false'
+    soap_response.queryMoreResponse.result[:queryLocator].should_not be_nil
+    soap_response.queryMoreResponse.result[:size].should == '3400'
+    soap_response.queryMoreResponse.result.records.size.should == 2
+    
+    lead = soap_response.queryMoreResponse.result.records.first
+    lead[:type].should == 'Lead'
+    lead[:FirstName].should == 'Joe'
+    lead[:LastName].should == 'Bob'
+    lead[:Email].should == 'joe@bob.com'
+    lead[:Id].first.should == '00Q7000000MnYl1EAF'
+  end
+  
+  it 'should handle an invalid query locator' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/invalid_locator.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    soap_response[:Fault].should_not be_nil
+  end
+  
   it 'should handle a malformed response' do
     xml = IO.read(File.dirname(__FILE__) + '/fixtures/malformed.xml')
     soap_response = Salesforce::SoapResponse.new xml
@@ -48,13 +70,14 @@ describe Salesforce::SoapResponse, 'parsing' do
     soap_response = Salesforce::SoapResponse.new xml
     soap_response.queryResponse.result.done.should == 'false'
     soap_response.queryResponse.result[:queryLocator].should_not be_nil
-    soap_response.queryResponse.result[:size].should == '2'
+    soap_response.queryResponse.result[:size].should == '3400'
     soap_response.queryResponse.result.records.size.should == 2
     
-    account = soap_response.queryResponse.result.records.first
-    account[:type].should == 'Lead'
-    account[:FirstName].should == 'Joe'
-    account[:LastName].should == 'Bob'
-    account[:Id].first.should == '00Q7000000MnYrAEAV'
+    lead = soap_response.queryResponse.result.records.first
+    lead[:type].should == 'Lead'
+    lead[:FirstName].should == 'Joe'
+    lead[:LastName].should == 'Bob'
+    lead[:Email].should == 'joe@bob.com'
+    lead[:Id].first.should == '00Q7000000MnYrAEAV'
   end
 end

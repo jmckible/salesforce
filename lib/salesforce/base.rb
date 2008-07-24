@@ -9,13 +9,14 @@ module Salesforce
       end
       
       def find(session, *args)
-        options = args.last.is_a?(Hash) ? pop : {}
+        options = args.last.is_a?(Hash) ? args.pop : {}
         
         case args.first
-          when :first then find_initial session, options
-          when :last  then find_last    session, options
-          when :all   then find_every   session, options
-          else             find_from_id session, args.first
+          when :first   then find_initial session, options
+          when :last    then find_last    session, options
+          when :all     then find_every   session, options
+          when :locator then find_locator session, options
+          else               find_from_id session, args.first
         end
       end
       
@@ -33,18 +34,26 @@ module Salesforce
     
       def find_every(session, options)
         response = session.query :queryResponse=>query_string(options)
-      
         raise Salesforce::InvalidParameters unless response[:Fault].nil?
+        process_response response.queryResponse
+      end
       
+      def find_locator(session, options)
+        response = session.queryMore :queryLocator=>options[:id]
+        raise Salesforce::InvalidParameters unless response[:Fault].nil?
+        process_response response.queryMoreResponse
+      end
+      
+      def process_response(query_response)
         collection = Salesforce::Collection.new 
       
-        collection.total_results = response.queryResponse.result[:size].to_i
-        collection.done = false if response.queryResponse.result.done == 'false'
-        collection.locator = response.queryResponse.result[:queryLocator] if response.queryResponse.result[:queryLocator]
+        collection.total_results = query_response.result[:size].to_i
+        collection.done = false if query_response.result.done == 'false'
+        collection.locator = query_response.result[:queryLocator] if query_response.result[:queryLocator]
       
         return collection if collection.total_results == 0
       
-        records = response.queryResponse.result.records
+        records = query_response.result.records
         records = [records] unless records.is_a?(Array)
         records.each { |r| collection << initialize_from_hash(r) }
   

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
   <soapenv:Body>
-    <queryResponse>
+    <queryMoreResponse>
       <result xsi:type="QueryResult">
         <done>false</done>
-        <queryLocator>01g70000002cNzoAAE-200</queryLocator>
+        <queryLocator>01g70000002cRQJAA2-400</queryLocator>
         <records xsi:type="sf:sObject">
           <sf:type>Lead</sf:type>
-          <sf:Id>00Q7000000MnYrAEAV</sf:Id>
-          <sf:Id>00Q7000000MnYrAEAV</sf:Id>
+          <sf:Id>00Q7000000MnYl1EAF</sf:Id>
+          <sf:Id>00Q7000000MnYl1EAF</sf:Id>
           <sf:FirstName>Joe</sf:FirstName>
           <sf:LastName>Bob</sf:LastName>
           <sf:Email>joe@bob.com</sf:Email>
         </records>
         <records xsi:type="sf:sObject">
           <sf:type>Lead</sf:type>
-          <sf:Id>00Q7000000MnYrBEAV</sf:Id>
-          <sf:Id>00Q7000000MnYrBEAV</sf:Id>
+          <sf:Id>00Q7000000MnYl2EAF</sf:Id>
+          <sf:Id>00Q7000000MnYl2EAF</sf:Id>
           <sf:FirstName>Bob</sf:FirstName>
           <sf:LastName>Joe</sf:LastName>
           <sf:Email>bob@joe.com</sf:Email>
         </records>
         <size>3400</size>
       </result>
-    </queryResponse>
+    </queryMoreResponse>
   </soapenv:Body>
 </soapenv:Envelope>

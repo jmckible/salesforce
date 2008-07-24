@@ -91,7 +91,65 @@ describe Salesforce::Base, 'parse results into collection' do
     collection.class.should == Salesforce::Collection
     collection.should_not be_done
     collection.locator.should_not be_nil
-    collection.total_results.should == 2
+    collection.total_results.should == 3400
+    collection.size.should == 2
+  end
+  
+  it 'should find the first record' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/leads.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    
+    lead = Salesforce::Lead.find session, :first
+    lead.class.should == Salesforce::Lead
+    lead.id.should == '00Q7000000MnYrAEAV'
+    lead.first_name.should == 'Joe'
+    lead.last_name.should == 'Bob'
+    lead.email.should == 'joe@bob.com'
+  end
+  
+  it 'should find the last record' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/leads.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    
+    lead = Salesforce::Lead.find session, :last
+    lead.class.should == Salesforce::Lead
+    lead.id.should == '00Q7000000MnYrBEAV'
+    lead.first_name.should == 'Bob'
+    lead.last_name.should == 'Joe'
+    lead.email.should == 'bob@joe.com'
+  end
+  
+  it 'should find a record by id' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/account.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    
+    account = Salesforce::Account.find session, '0017000000Mk5RKAAZ'
+    account.class.should == Salesforce::Account
+    account.id.should == '0017000000Mk5RKAAZ'
+    account.name.should == 'Express Logistics and Transport'
+  end
+  
+  it 'should find a locator record' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/locator.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:queryMore).and_return(soap_response)
+    
+    collection = Salesforce::Lead.find session, :locator, :id=>'01g70000002cRQJAA2-200'
+    collection.class.should == Salesforce::Collection
+    collection.should_not be_done
+    collection.locator.should_not be_nil
+    collection.total_results.should == 3400
     collection.size.should == 2
   end
 end
