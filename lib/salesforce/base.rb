@@ -18,6 +18,8 @@ module Salesforce
     def self.find_every(session, options)
       response = session.query :queryResponse=>query_string(options)
       
+      raise Salesforce::InvalidParameters unless response[:Fault].nil?
+      
       collection = Salesforce::Collection.new 
       
       collection.total_results = response.queryResponse.result[:size].to_i

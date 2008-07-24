@@ -9,7 +9,15 @@ describe Salesforce::Base, 'query string' do
 end
 
 describe Salesforce::Base, 'parse results into collection' do
-  it 'should handle a malformed query' 
+  it 'should handle a malformed query' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/malformed.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    
+    lambda { Salesforce::Account.find session, :select=>[:id, :name] }.should raise_error(Salesforce::InvalidParameters)
+  end
   
   it 'should create an empty collection' do
     xml = IO.read(File.dirname(__FILE__) + '/fixtures/empty.xml')
