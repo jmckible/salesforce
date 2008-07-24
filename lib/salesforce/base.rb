@@ -20,14 +20,16 @@ module Salesforce
       
       collection = Salesforce::Collection.new 
       
-      records = response.queryResponse.result.records
-      records = [records] unless records.is_a?(Array)
-      records.each { |r| collection << initialize_from_hash(r) }
-      
       collection.total_results = response.queryResponse.result[:size].to_i
       collection.done = false if response.queryResponse.result.done == 'false'
       collection.locator = response.queryResponse.result[:queryLocator] if response.queryResponse.result[:queryLocator]
       
+      return collection if collection.total_results == 0
+      
+      records = response.queryResponse.result.records
+      records = [records] unless records.is_a?(Array)
+      records.each { |r| collection << initialize_from_hash(r) }
+  
       collection
     end
     
