@@ -11,5 +11,9 @@ module Salesforce
       klass.find session, *options
     end
     
+    def find_by_soql(query)
+      klass.find_by_soql session, query
+    end
+    
   end
 end

@@ -80,6 +80,22 @@ describe Salesforce::Base, 'parse results into collection' do
     collection.size.should == 6
   end
   
+  it 'should query with soql' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/accounts.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    query = "select Id, Name from Account"
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    
+    collection = Salesforce::Account.find_by_soql session, query
+    collection.class.should == Salesforce::Collection
+    collection.should be_done
+    collection.locator.should be_nil
+    collection.total_results.should == 6
+    collection.size.should == 6
+  end
+  
   it 'should create a collection which is not done' do
     xml = IO.read(File.dirname(__FILE__) + '/fixtures/leads.xml')
     soap_response = Salesforce::SoapResponse.new xml

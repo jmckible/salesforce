@@ -32,6 +32,12 @@ module Salesforce
         find_every(session, options).last
       end
     
+      def find_by_soql(session, query)
+        response = session.query :queryResponse=>query
+        raise Salesforce::InvalidParameters unless response[:Fault].nil?
+        process_response response.queryResponse
+      end
+    
       def find_every(session, options)
         response = session.query :queryResponse=>query_string(options)
         raise Salesforce::InvalidParameters unless response[:Fault].nil?
