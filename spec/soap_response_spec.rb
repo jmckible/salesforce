@@ -1,7 +1,11 @@
 require File.dirname(__FILE__) + '/helper'
 
 describe Salesforce::SoapResponse, 'parsing' do
-  it 'should handle an error response'
+  it 'should handle a malformed response' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/malformed.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    soap_response[:Fault].should_not be_nil
+  end
   
   it 'should build a response from an empty result' do
     xml = IO.read(File.dirname(__FILE__) + '/fixtures/empty.xml')

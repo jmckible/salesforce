@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sf="urn:fault.partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <soapenv:Fault>
+      <faultcode>sf:MALFORMED_QUERY</faultcode>
+      <faultstring>MALFORMED_QUERY: \nlastname, email from Lead where id =\n                                    ^\nERROR at Row:1:Column:59\nunexpected token: null</faultstring>
+      <detail>
+        <sf:MalformedQueryFault xsi:type="sf:MalformedQueryFault">
+          <sf:exceptionCode>MALFORMED_QUERY</sf:exceptionCode>
+          <sf:exceptionMessage>\nlastname, email from Lead where id =\n                                    ^\nERROR at Row:1:Column:59\nunexpected token: null</sf:exceptionMessage>
+          <sf:row>1</sf:row>
+          <sf:column>59</sf:column>
+        </sf:MalformedQueryFault>
+      </detail>
+    </soapenv:Fault>
+  </soapenv:Body>
+</soapenv:Envelope>
