@@ -48,7 +48,7 @@ module Salesforce
             gsub(/([a-z\d])([A-Z])/,'\1_\2').
             downcase
           
-          object.__send__ "#{attribute}=", pair[1]
+          object.__send__("#{attribute}=", pair[1]) if object.respond_to?("#{attribute}=")
         end
       end
       object.id = hash[:Id].first
