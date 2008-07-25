@@ -19,7 +19,7 @@ module Salesforce
     def reestablish_salesforce_session
       return false if salesforce_url.nil?  || salesforce_session_id.nil? ||
                       salesforce_url == '' || salesforce_session_id == ''
-      @salesforce_session = Salesforce::Session.new salesforce_soap_url
+      @salesforce_session = Salesforce::Session.new salesforce_url, salesforce_session_id
       @salesforce_session.test_connection
     rescue Salesforce::InvalidCredentials
       clear_salesforce_session
