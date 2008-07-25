@@ -1,17 +1,25 @@
 require File.dirname(__FILE__) + '/helper'
 
+###############################################################################
+#                               C O L U M N S                                 #
+###############################################################################
 describe Salesforce::Base, 'columns' do
-  it 'should have default id column' do
+  it 'should have a class level columns hash' do
+    Salesforce::Base.columns.should == {:Id=>:id}
+    Salesforce::Account.columns.should == {:Id=>:id, :Name=>:name}
     Salesforce::Base.columns.should == {:Id=>:id}
   end
 end
 
+###############################################################################
+#                          Q U E R Y    S T R I N G                           #
+###############################################################################
 describe Salesforce::Base, 'query string' do
   it 'should have a default' do
     Salesforce::Base.query_string.should == "select Id from Base"
   end
   
-  it 'should reject unknown columns' do
+  it 'should reject unknown columns on select' do
     Salesforce::Base.query_string(:select=>[:id, :name]).should == "select Id from Base"
   end
   
@@ -23,31 +31,33 @@ describe Salesforce::Base, 'query string' do
     Salesforce::Base.query_string(:conditions=>"1 = 1").should == "select Id from Base where 1 = 1"
   end
   
-  it 'should handle order' do
+  it 'should handle order clause' do
     Salesforce::Base.query_string(:order=>'name').should == "select Id from Base order by name"
     Salesforce::Account.query_string(:order=>:name).should == "select Id, Name from Account order by Name"
     Salesforce::Base.query_string(:order=>:name).should == "select Id from Base"
   end
 end
 
+###############################################################################
+#                                      F I N D                                #
+###############################################################################
 describe Salesforce::Base, 'parse results into collection' do
-  it 'should handle a malformed query' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/malformed.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
+  def stub_session(filename)
+    soap_response = Salesforce::SoapResponse.new IO.read(File.dirname(__FILE__) + "/fixtures/#{filename}")
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
     session.stub!(:query).and_return(soap_response)
-    
-    lambda { Salesforce::Account.find session, :all }.should raise_error(Salesforce::InvalidParameters)
+    session
+  end
+  
+  it 'should handle a malformed query' do
+    session = stub_session 'malformed.xml'    
+    lambda { 
+      Salesforce::Account.find session, :all 
+    }.should raise_error(Salesforce::InvalidParameters)
   end
   
   it 'should create an empty collection' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/empty.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
-    
+    session = stub_session 'empty.xml'
     collection = Salesforce::Account.find session, :all
     collection.class.should == Salesforce::Collection
     collection.should be_done
@@ -57,12 +67,7 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should create a collection of one' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/account.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
-    
+    session = stub_session 'account.xml'
     collection = Salesforce::Account.find session, :all
     collection.class.should == Salesforce::Collection
     collection.should be_done
@@ -72,12 +77,7 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should create a collection of many' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/accounts.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
-    
+    session = stub_session 'accounts.xml'
     collection = Salesforce::Account.find session, :all
     collection.class.should == Salesforce::Collection
     collection.should be_done
@@ -87,11 +87,7 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should create a collection of many with belongs_to' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/contacts.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
+    session = stub_session 'contacts.xml'
     
     collection = Salesforce::Contact.find session, :all
     collection.class.should == Salesforce::Collection
@@ -112,11 +108,7 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should create a collection of many with multiple belongs_to' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/campaign_members.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
+    session = stub_session 'campaign_members.xml'
     
     collection = Salesforce::CampaignMember.find session, :all
     collection.class.should == Salesforce::Collection
@@ -142,14 +134,8 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should query with soql' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/accounts.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    query = "select Id, Name from Account"
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
-    
-    collection = Salesforce::Account.find_by_soql session, query
+    session = stub_session 'accounts.xml'
+    collection = Salesforce::Account.find_by_soql session, "select Id, Name from Account"
     collection.class.should == Salesforce::Collection
     collection.should be_done
     collection.locator.should be_nil
@@ -158,12 +144,7 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should create a collection which is not done' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/leads.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
-    
+    session = stub_session 'leads.xml'
     collection = Salesforce::Lead.find session, :all
     collection.class.should == Salesforce::Collection
     collection.should_not be_done
@@ -173,12 +154,7 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should find the first record' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/leads.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
-    
+    session = stub_session 'leads.xml'
     lead = Salesforce::Lead.find session, :first
     lead.class.should == Salesforce::Lead
     lead.id.should == '00Q7000000MnYrAEAV'
@@ -188,12 +164,7 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should find the last record' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/leads.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
-    
+    session = stub_session 'leads.xml'
     lead = Salesforce::Lead.find session, :last
     lead.class.should == Salesforce::Lead
     lead.id.should == '00Q7000000MnYrBEAV'
@@ -203,12 +174,7 @@ describe Salesforce::Base, 'parse results into collection' do
   end
   
   it 'should find a record by id' do
-    xml = IO.read(File.dirname(__FILE__) + '/fixtures/account.xml')
-    soap_response = Salesforce::SoapResponse.new xml
-    
-    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
-    session.stub!(:query).and_return(soap_response)
-    
+    session = stub_session 'account.xml'
     account = Salesforce::Account.find session, '0017000000Mk5RKAAZ'
     account.class.should == Salesforce::Account
     account.id.should == '0017000000Mk5RKAAZ'
