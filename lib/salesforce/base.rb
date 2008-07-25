@@ -54,6 +54,14 @@ module Salesforce
         process_response response.queryMoreResponse
       end
       
+      def like(session, name)
+        if columns[:Name] && !name.nil? && name != ''
+          find session, :all, :conditions=>"Name like '%#{name}%'", :order=>:name
+        else
+          find session, :all
+        end
+      end
+      
       def process_response(query_response)
         collection = Salesforce::Collection.new 
       

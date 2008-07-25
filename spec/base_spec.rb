@@ -41,7 +41,7 @@ end
 ###############################################################################
 #                                      F I N D                                #
 ###############################################################################
-describe Salesforce::Base, 'parse results into collection' do
+describe Salesforce::Base, 'finding' do
   def stub_session(filename)
     soap_response = Salesforce::SoapResponse.new IO.read(File.dirname(__FILE__) + "/fixtures/#{filename}")
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
@@ -197,6 +197,40 @@ describe Salesforce::Base, 'parse results into collection' do
   end
 end
 
+###############################################################################
+#                                   L I K E                                   #
+###############################################################################
+describe Salesforce::Base, 'parse results into collection' do
+  def stub_session(filename)
+    soap_response = Salesforce::SoapResponse.new IO.read(File.dirname(__FILE__) + "/fixtures/#{filename}")
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    session
+  end
+  
+  it 'should do a find on the name' do
+    session = stub_session 'accounts.xml'
+    Salesforce::Account.should_receive(:find).with(session, :all, :conditions=>"Name like '%name%'", :order=>:name)
+    Salesforce::Account.like(session, 'name')
+  end
+  
+  it 'should just do a find if no name attribute' do
+    session = stub_session 'accounts.xml'
+    Salesforce::Base.should_receive(:find).with(session, :all)
+    Salesforce::Base.like(session, 'name')
+  end
+  
+  it 'should just do a find if no string passed' do
+    session = stub_session 'accounts.xml'
+    Salesforce::Account.should_receive(:find).with(session, :all)
+    Salesforce::Account.like(session, '')
+  end
+end
+
+
+###############################################################################
+#                              I N I T I A L I Z I N G                        #
+###############################################################################
 describe Salesforce::Base, 'initializing from a hash' do
   it 'should parse an account' do
     account = Salesforce::Base.initialize_from_hash :type=>'Account', :Name=>'name', :Id=>['id', 'id']
