@@ -12,7 +12,7 @@ module Salesforce
     def acquire_salesforce_session
       return true if reestablish_salesforce_session
       establish_salesforce_session
-    rescue Salesforce::InvalidCredentials
+    rescue Salesforce::SalesforceError
       return false
     end
     
@@ -21,7 +21,7 @@ module Salesforce
                       salesforce_url == '' || salesforce_session_id == ''
       @salesforce_session = Salesforce::Session.new salesforce_url, salesforce_session_id
       @salesforce_session.test_connection
-    rescue Salesforce::InvalidCredentials
+    rescue Salesforce::SalesforceError
       clear_salesforce_session
       return false
     end
