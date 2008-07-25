@@ -96,5 +96,6 @@ describe Salesforce::SoapResponse, 'parsing' do
     contact[:Email].should == 'stella@pavlova.com'
     contact[:Id].first.should == '0037000000UQb6wAAD'
     contact[:AccountId].should == '0017000000Mk5RMAAZ'
+    contact[:Account].should == {:type=>"Account", :Id=>["0017000000Mk5RMAAZ", "0017000000Mk5RMAAZ"], :Name=>"United Oil Gas Corp."}
   end
 end

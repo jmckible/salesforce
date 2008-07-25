@@ -10,19 +10,31 @@
           <sf:Id>0037000000UQb6wAAD</sf:Id>
           <sf:Id>0037000000UQb6wAAD</sf:Id>
           <sf:FirstName>Stella</sf:FirstName>
-          <sf:AccountId>0017000000Mk5RMAAZ</sf:AccountId>
           <sf:LastName>Pavlova</sf:LastName>
           <sf:Email>stella@pavlova.com</sf:Email>
-        </records>
-        <records xsi:type="sf:sObject">
-          <sf:type>Contact</sf:type>
-          <sf:Id>0037000000UQb6xAAD</sf:Id>
-          <sf:Id>0037000000UQb6xAAD</sf:Id>
-          <sf:FirstName>Lauren</sf:FirstName>
           <sf:AccountId>0017000000Mk5RMAAZ</sf:AccountId>
-          <sf:LastName>Boyle</sf:LastName>
-          <sf:Email>lauren@boyle.com</sf:Email>
-        </records>
+          <sf:Account xsi:type="sf:sObject">
+            <sf:type>Account</sf:type>
+            <sf:Id>0017000000Mk5RMAAZ</sf:Id>
+            <sf:Id>0017000000Mk5RMAAZ</sf:Id>
+            <sf:Name>United Oil Gas Corp.</sf:Name>
+          </sf:Account>
+          </records>
+          <records xsi:type="sf:sObject">
+            <sf:type>Contact</sf:type>
+            <sf:Id>0037000000UQb6xAAD</sf:Id>
+            <sf:Id>0037000000UQb6xAAD</sf:Id>
+            <sf:FirstName>Lauren</sf:FirstName>
+            <sf:AccountId>0017000000Mk5RMAAZ</sf:AccountId>
+            <sf:LastName>Boyle</sf:LastName>
+            <sf:Email>lauren@boyle.com</sf:Email>
+            <sf:Account xsi:type="sf:sObject">
+              <sf:type>Account</sf:type>
+              <sf:Id>0017000000Mk5RMAAZ</sf:Id>
+              <sf:Id>0017000000Mk5RMAAZ</sf:Id>
+              <sf:Name>United Oil Gas Corp.</sf:Name>
+            </sf:Account>
+          </records>
         <size>2</size>
       </result>
     </queryResponse>

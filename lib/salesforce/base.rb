@@ -8,6 +8,10 @@ module Salesforce
         {:Id=>:id}
       end
       
+      def belongs_to
+        {}
+      end
+      
       def find(session, *args)
         options = args.last.is_a?(Hash) ? args.pop : {}
         
@@ -73,6 +77,13 @@ module Salesforce
         cols = options[:select] || columns.values
         cols = [cols] unless cols.is_a? Array
         cols = cols.map{ |c| columns.invert[c] }.compact.map{|c|c.to_s}.join ', '
+        
+        unless belongs_to.empty?
+          belongs_to.each do |klass, attribute|
+            cols = cols + ', ' + klass.columns.keys.collect{|c| "#{klass.table_name}.#{c}"}.join(', ')
+          end
+        end
+        
         conditions = options[:conditions]
         base = "select #{cols} from #{table_name}"
         base += " where #{conditions}" if conditions
@@ -91,8 +102,13 @@ module Salesforce
         end
         hash.each do |pair|
           unless pair[0] == :type || pair[0] == :Id
-            method = object.class.columns[pair[0]].to_s + '='
-            value = pair[1].is_a?(Hash) ? initialize_from_hash(pair[1]) : pair[1]
+            if pair[1].is_a? Hash
+              value  = initialize_from_hash pair[1]
+              method = "#{object.class.belongs_to[value.class]}="
+            else
+              method = object.class.columns[pair[0]].to_s + '='
+              value  = pair[1]
+            end
             object.__send__(method, value) if object.respond_to? method
           end
         end

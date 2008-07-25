@@ -80,6 +80,31 @@ describe Salesforce::Base, 'parse results into collection' do
     collection.size.should == 6
   end
   
+  it 'should create a collection of many with belongs_to' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/contacts.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    
+    collection = Salesforce::Contact.find session, :all
+    collection.class.should == Salesforce::Collection
+    collection.should be_done
+    collection.locator.should be_nil
+    collection.total_results.should == 2
+    collection.size.should == 2
+    
+    contact = collection.first
+    contact.first_name.should == 'Stella'
+    contact.last_name.should == 'Pavlova'
+    contact.id.should == '0037000000UQb6wAAD'
+    contact.email.should == 'stella@pavlova.com'
+    contact.account_id.should == '0017000000Mk5RMAAZ'
+    contact.account.class.should == Salesforce::Account
+    contact.account.id.should == contact.account_id
+    contact.account.name.should == 'United Oil Gas Corp.'
+  end
+  
   it 'should query with soql' do
     xml = IO.read(File.dirname(__FILE__) + '/fixtures/accounts.xml')
     soap_response = Salesforce::SoapResponse.new xml
