@@ -100,16 +100,16 @@ module Salesforce
         else
           return nil
         end
-        hash.each do |pair|
-          unless pair[0] == :type || pair[0] == :Id
-            if pair[1].is_a? Hash
-              value  = initialize_from_hash pair[1]
-              method = "#{object.class.belongs_to[value.class]}="
+        hash.each do |key, value|
+          unless key == :type || key == :Id
+            if value.is_a? Hash
+              result = initialize_from_hash value
+              method = "#{object.class.belongs_to[result.class]}="
             else
-              method = object.class.columns[pair[0]].to_s + '='
-              value  = pair[1]
+              method = object.class.columns[key].to_s + '='
+              result = value
             end
-            object.__send__(method, value) if object.respond_to? method
+            object.__send__(method, result) if object.respond_to? method
           end
         end
         object.id = hash[:Id].first
