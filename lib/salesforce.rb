@@ -30,6 +30,7 @@ require 'salesforce/base'
 
 require 'salesforce/account'
 require 'salesforce/campaign'
+require 'salesforce/campaign_member'
 require 'salesforce/collection'
 require 'salesforce/collection_proxy'
 require 'salesforce/contact'

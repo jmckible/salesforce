@@ -11,6 +11,10 @@ module Salesforce
       CollectionProxy.new self, Salesforce::Campaign
     end
     
+    def campaign_members
+      CollectionProxy.new self, Salesforce::Campaign
+    end
+    
     def contacts
       CollectionProxy.new self, Salesforce::Contact
     end

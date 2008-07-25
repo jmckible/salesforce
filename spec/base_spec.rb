@@ -105,6 +105,36 @@ describe Salesforce::Base, 'parse results into collection' do
     contact.account.name.should == 'United Oil Gas Corp.'
   end
   
+  it 'should create a collection of many with multiple belongs_to' do
+    xml = IO.read(File.dirname(__FILE__) + '/fixtures/campaign_members.xml')
+    soap_response = Salesforce::SoapResponse.new xml
+    
+    session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
+    session.stub!(:query).and_return(soap_response)
+    
+    collection = Salesforce::CampaignMember.find session, :all
+    collection.class.should == Salesforce::Collection
+    collection.should be_done
+    collection.locator.should be_nil
+    collection.total_results.should == 2
+    collection.size.should == 2
+    
+    contact = collection.first.person
+    lead = collection.last.person
+    
+    contact.class.should == Salesforce::Contact
+    contact.first_name.should == 'Lauren'
+    contact.last_name.should == 'Boyle'
+    contact.id.should == '0037000000UQb6xAAD'
+    contact.email.should == 'lauren@boyle.com'
+
+    lead.class.should == Salesforce::Lead
+    lead.first_name.should == 'Liz'
+    lead.last_name.should == 'Cruz'
+    lead.id.should == '0037000000UQb74AAD'
+    lead.email.should == 'liz@cruz.com'
+  end
+  
   it 'should query with soql' do
     xml = IO.read(File.dirname(__FILE__) + '/fixtures/accounts.xml')
     soap_response = Salesforce::SoapResponse.new xml

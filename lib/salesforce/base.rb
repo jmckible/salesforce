@@ -93,6 +93,10 @@ module Salesforce
       def initialize_from_hash(hash)
         if hash[:type] == 'Account'
           object = Salesforce::Account.new
+        elsif hash[:type] == 'Campaign'
+          object = Salesforce::Campaign.new
+        elsif hash[:type] == 'CampaignMember' 
+          object = Salesforce::CampaignMember.new
         elsif hash[:type] == 'Lead'
           object = Salesforce::Lead.new
         elsif hash[:type] == 'Contact'

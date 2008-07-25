@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+  <soapenv:Body>
+    <queryResponse>
+      <result xsi:type="QueryResult">
+        <done>true</done>
+        <queryLocator xsi:nil="true"/>
+        <records xsi:type="sf:sObject">
+          <sf:type>CampaignMember</sf:type>
+          <sf:Id>00v7000000D0BeiAAF</sf:Id>
+          <sf:Id>00v7000000D0BeiAAF</sf:Id>
+          <sf:CampaignId>701700000009QLhAAM</sf:CampaignId>
+          <sf:LeadId xsi:nil="true"/>
+          <sf:Lead xsi:nil="true"/>
+          <sf:ContactId>0037000000UQb6xAAD</sf:ContactId>
+          <sf:Contact xsi:type="sf:sObject">
+            <sf:type>Contact</sf:type>
+            <sf:Id>0037000000UQb6xAAD</sf:Id>
+            <sf:Id>0037000000UQb6xAAD</sf:Id>
+            <sf:FirstName>Lauren</sf:FirstName>
+            <sf:LastName>Boyle</sf:LastName>
+            <sf:Email>lauren@boyle.com</sf:Email>
+            </sf:Contact>
+          </records>
+          <records xsi:type="sf:sObject">
+            <sf:type>CampaignMember</sf:type>
+            <sf:Id>00v7000000D0BeiAAF</sf:Id>
+            <sf:Id>00v7000000D0BeiAAF</sf:Id>
+            <sf:CampaignId>701700000009QLhAAM</sf:CampaignId>
+            <sf:ContactId xsi:nil="true"/>
+            <sf:Contact xsi:nil="true"/>
+            <sf:LeadId>0037000000UQb74AAD</sf:LeadId>
+            <sf:Lead xsi:type="sf:sObject">
+              <sf:type>Lead</sf:type>
+              <sf:Id>0037000000UQb74AAD</sf:Id>
+              <sf:Id>0037000000UQb74AAD</sf:Id>
+              <sf:FirstName>Liz</sf:FirstName>
+              <sf:LastName>Cruz</sf:LastName>
+              <sf:Email>liz@cruz.com</sf:Email>
+            </sf:Lead>
+          </records>
+        <size>2</size>
+      </result>
+    </queryResponse>
+  </soapenv:Body>
+</soapenv:Envelope>
