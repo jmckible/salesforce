@@ -87,6 +87,19 @@ module Salesforce
         conditions = options[:conditions]
         base = "select #{cols} from #{table_name}"
         base += " where #{conditions}" if conditions
+        
+        order = options[:order]
+        if order
+          if order.is_a? String
+            base += " order by #{order}"
+          else
+            attribute = columns.invert[order]
+            if attribute
+              base += " order by #{attribute.to_s}"
+            end
+          end
+        end
+        
         base
       end
     

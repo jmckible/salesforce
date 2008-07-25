@@ -22,6 +22,12 @@ describe Salesforce::Base, 'query string' do
   it 'should handle conditions' do
     Salesforce::Base.query_string(:conditions=>"1 = 1").should == "select Id from Base where 1 = 1"
   end
+  
+  it 'should handle order' do
+    Salesforce::Base.query_string(:order=>'name').should == "select Id from Base order by name"
+    Salesforce::Account.query_string(:order=>:name).should == "select Id, Name from Account order by Name"
+    Salesforce::Base.query_string(:order=>:name).should == "select Id from Base"
+  end
 end
 
 describe Salesforce::Base, 'parse results into collection' do
