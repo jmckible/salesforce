@@ -15,7 +15,7 @@ module Salesforce
       klass.find_by_soql session, query
     end
     
-    def like(name)
+    def like(*options)
       klass.like session, name
     end
     

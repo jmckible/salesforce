@@ -3,6 +3,12 @@ module Salesforce
     
     attr_accessor :id
     
+    def initialize(params={})
+      params.each do |key, value|
+        __send__ "#{key}=", value if respond_to? "#{key}="
+      end
+    end
+    
     class << self
       def columns
         {:Id=>:id}
@@ -54,11 +60,26 @@ module Salesforce
         process_response response.queryMoreResponse
       end
       
-      def like(session, name)
-        if columns[:Name] && !name.nil? && name != ''
-          find session, :all, :conditions=>"Name like '%#{name}%'", :order=>:name
+      def like(session, *args)
+        options = args.last.is_a?(Hash) ? args.pop : {}
+        query   = args.first
+        
+        on = options[:on] || :name
+        column = columns.invert[on]
+        
+        if column.nil?
+          if options[:order] 
+            find session, :all, :order=>options[:order]
+          else
+            find session, :all
+          end
         else
-          find session, :all
+          order = options[:order] || on
+          if query.nil? || query == ''
+            find session, :all, :order=>order
+          else
+            find session, :all, :conditions=>"#{column} like '%#{query}%'", :order=>order
+          end
         end
       end
       
@@ -145,5 +166,7 @@ module Salesforce
         name.split('::').last
       end
     end
+  
+    
   end
 end

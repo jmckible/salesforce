@@ -200,7 +200,7 @@ end
 ###############################################################################
 #                                   L I K E                                   #
 ###############################################################################
-describe Salesforce::Base, 'parse results into collection' do
+describe Salesforce::Base, 'like query' do
   def stub_session(filename)
     soap_response = Salesforce::SoapResponse.new IO.read(File.dirname(__FILE__) + "/fixtures/#{filename}")
     session = Salesforce::Session.new 'https://www.salesforce.com/services/Soap/u/11.0'
@@ -208,28 +208,54 @@ describe Salesforce::Base, 'parse results into collection' do
     session
   end
   
+  before(:all) do
+    @session = stub_session 'accounts.xml'
+  end
+  
   it 'should do a find on the name' do
-    session = stub_session 'accounts.xml'
-    Salesforce::Account.should_receive(:find).with(session, :all, :conditions=>"Name like '%name%'", :order=>:name)
-    Salesforce::Account.like(session, 'name')
+    Salesforce::Account.should_receive(:find).with(@session, :all, :conditions=>"Name like '%query%'", :order=>:name)
+    Salesforce::Account.like(@session, 'query')
+  end
+  
+  it 'should overwrite the order by clause' do
+    Salesforce::Lead.should_receive(:find).with(nil, :all, :conditions=>"Name like '%query%'", :order=>:first_name)
+    Salesforce::Lead.like(nil, 'query', :order=>:first_name)
   end
   
   it 'should just do a find if no name attribute' do
-    session = stub_session 'accounts.xml'
-    Salesforce::Base.should_receive(:find).with(session, :all)
-    Salesforce::Base.like(session, 'name')
+    Salesforce::Base.should_receive(:find).with(@session, :all)
+    Salesforce::Base.like(@session, 'query')
+  end
+  
+  it 'should pass through order clause even if name is not a known attribute' do
+    Salesforce::Base.should_receive(:find).with(@session, :all, :order=>:id)
+    Salesforce::Base.like(@session, 'query', :order=>:id)
   end
   
   it 'should just do a find if no string passed' do
-    session = stub_session 'accounts.xml'
-    Salesforce::Account.should_receive(:find).with(session, :all)
-    Salesforce::Account.like(session, '')
+    Salesforce::Account.should_receive(:find).with(@session, :all, :order=>:name)
+    Salesforce::Account.like(@session, '')
+  end
+  
+  it 'should overwrite the Name column with a known column' do
+    Salesforce::Lead.should_receive(:find).with(@session, :all, :conditions=>"FirstName like '%query%'", :order=>:first_name)
+    Salesforce::Lead.like(@session, 'query', :on=>:first_name)
+  end
+  
+  it 'should overwrite the Name column with a known column and preserve order' do
+    Salesforce::Lead.should_receive(:find).with(@session, :all, :conditions=>"FirstName like '%query%'", :order=>:id)
+    Salesforce::Lead.like(@session, 'query', :on=>:first_name, :order=>:id)
+  end
+  
+  it 'should handle overwriting the name column with an unknown column' do
+    Salesforce::Base.should_receive(:find).with(@session, :all)
+    Salesforce::Base.like(@session, 'query', :on=>:name)
   end
 end
 
 
 ###############################################################################
-#                              I N I T I A L I Z I N G                        #
+#                 I N I T I A L I Z E    F R O M    H A S H                   #
 ###############################################################################
 describe Salesforce::Base, 'initializing from a hash' do
   it 'should parse an account' do
@@ -241,5 +267,21 @@ describe Salesforce::Base, 'initializing from a hash' do
   
   it 'should skip an unknown' do
     Salesforce::Base.initialize_from_hash(:type=>'Unknown').should be_nil
+  end
+end
+
+###############################################################################
+#                             I N I T I A L I Z E                             #
+###############################################################################
+describe Salesforce::Base, 'initialize' do
+  it 'should assign variables' do
+    lead = Salesforce::Lead.new :first_name=>'First', :last_name=>'Last'
+    lead.first_name.should == 'First'
+    lead.last_name.should == 'Last'
+  end
+  
+  it 'should skip unknown values' do
+    base = Salesforce::Base.new :id=>'id', :name=>'fake'
+    base.id.should == 'id'
   end
 end
