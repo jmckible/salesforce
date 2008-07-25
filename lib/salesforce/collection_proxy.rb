@@ -16,7 +16,7 @@ module Salesforce
     end
     
     def like(*options)
-      klass.like session, name
+      klass.like session, *options
     end
     
   end
