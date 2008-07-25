@@ -7,6 +7,10 @@ module Salesforce
       CollectionProxy.new self, Salesforce::Account
     end
     
+    def campaigns
+      CollectionProxy.new self, Salesforce::Campaign
+    end
+    
     def contacts
       CollectionProxy.new self, Salesforce::Contact
     end

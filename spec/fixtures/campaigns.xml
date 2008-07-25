@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+  <soapenv:Body>
+    <queryResponse>
+      <result xsi:type="QueryResult">
+        <done>true</done>
+        <queryLocator xsi:nil="true"/>
+        <records xsi:type="sf:sObject">
+          <sf:type>Campaign</sf:type>
+          <sf:Id>701700000009QLhAAM</sf:Id>
+          <sf:Id>701700000009QLhAAM</sf:Id>
+          <sf:NumberOfContacts>2</sf:NumberOfContacts>
+          <sf:NumberOfLeads>0</sf:NumberOfLeads>
+          <sf:Name>Test</sf:Name>
+          <sf:Description xsi:nil="true"/>
+        </records>
+        <records xsi:type="sf:sObject">
+          <sf:type>Campaign</sf:type>
+          <sf:Id>701700000009YfEAAU</sf:Id>
+          <sf:Id>701700000009YfEAAU</sf:Id>
+          <sf:NumberOfContacts>0</sf:NumberOfContacts>
+          <sf:NumberOfLeads>0</sf:NumberOfLeads>
+          <sf:Name>Ice Cream</sf:Name>
+          <sf:Description xsi:nil="true"/>
+        </records>
+        <size>2</size>
+      </result>
+    </queryResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

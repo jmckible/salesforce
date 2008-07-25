@@ -8,5 +8,6 @@ describe 'harvester' do
     person.establish_salesforce_session.should be_true    
     #person.salesforce_session.contacts.find '0037000000UQb6wAAD'
     #person.salesforce_session.contacts.find_by_soql "select Id, FirstName, LastName, Email, AccountId, Account.Id, Account.name from Contact"
+    person.salesforce_session.campaigns.find :all
   end
 end
