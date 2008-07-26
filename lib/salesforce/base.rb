@@ -69,16 +69,16 @@ module Salesforce
         
         if column.nil?
           if options[:order] 
-            find session, :all, :order=>options[:order]
+            find session, :all, :order=>options[:order], :conditions=>options[:conditions]
           else
-            find session, :all
+            find session, :all, :conditions=>options[:conditions]
           end
         else
           order = options[:order] || on
           if query.nil? || query == ''
-            find session, :all, :order=>order
+            find session, :all, :order=>order, :conditions=>options[:conditions]
           else
-            find session, :all, :conditions=>"#{column} like '%#{query}%'", :order=>order
+            find session, :all, :conditions=>[options[:conditions], "#{column} like '%#{query}%'"].compact.join(' and '), :order=>order
           end
         end
       end

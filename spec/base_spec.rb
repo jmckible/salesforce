@@ -27,8 +27,12 @@ describe Salesforce::Base, 'query string' do
     Salesforce::Account.query_string(:select=>:name).should == "select Name from Account"
   end
   
-  it 'should handle conditions' do
+  it 'should add conditions' do
     Salesforce::Base.query_string(:conditions=>"1 = 1").should == "select Id from Base where 1 = 1"
+  end
+  
+  it 'should ignore nil conditions' do
+    Salesforce::Base.query_string(:conditions=>nil).should == "select Id from Base"
   end
   
   it 'should handle order clause' do
@@ -223,17 +227,17 @@ describe Salesforce::Base, 'like query' do
   end
   
   it 'should just do a find if no name attribute' do
-    Salesforce::Base.should_receive(:find).with(@session, :all)
+    Salesforce::Base.should_receive(:find).with(@session, :all, :conditions=>nil)
     Salesforce::Base.like(@session, 'query')
   end
   
   it 'should pass through order clause even if name is not a known attribute' do
-    Salesforce::Base.should_receive(:find).with(@session, :all, :order=>:id)
+    Salesforce::Base.should_receive(:find).with(@session, :all, :order=>:id, :conditions=>nil)
     Salesforce::Base.like(@session, 'query', :order=>:id)
   end
   
   it 'should just do a find if no string passed' do
-    Salesforce::Account.should_receive(:find).with(@session, :all, :order=>:name)
+    Salesforce::Account.should_receive(:find).with(@session, :all, :conditions=>nil, :order=>:name)
     Salesforce::Account.like(@session, '')
   end
   
@@ -248,8 +252,13 @@ describe Salesforce::Base, 'like query' do
   end
   
   it 'should handle overwriting the name column with an unknown column' do
-    Salesforce::Base.should_receive(:find).with(@session, :all)
+    Salesforce::Base.should_receive(:find).with(@session, :all, :conditions=>nil)
     Salesforce::Base.like(@session, 'query', :on=>:name)
+  end
+  
+  it 'should append a condition clause' do
+    Salesforce::Lead.should_receive(:find).with(@session, :all, :conditions=>"AccountId = 'id' and Name like '%query%'", :order=>:name)
+    Salesforce::Lead.like(@session, 'query', :conditions=>"AccountId = 'id'")
   end
 end
 
