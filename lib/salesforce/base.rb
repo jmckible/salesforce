@@ -10,6 +10,10 @@ module Salesforce
     end
     
     class << self
+      def table_name
+        name.split('::').last
+      end
+      
       def columns
         {:Id=>:id}
       end
@@ -133,19 +137,8 @@ module Salesforce
       end
     
       def initialize_from_hash(hash)
-        if hash[:type] == 'Account'
-          object = Salesforce::Account.new
-        elsif hash[:type] == 'Campaign'
-          object = Salesforce::Campaign.new
-        elsif hash[:type] == 'CampaignMember' 
-          object = Salesforce::CampaignMember.new
-        elsif hash[:type] == 'Lead'
-          object = Salesforce::Lead.new
-        elsif hash[:type] == 'Contact'
-          object = Salesforce::Contact.new
-        else
-          return nil
-        end
+        object = Salesforce.const_get(hash[:type]).new
+
         hash.each do |key, value|
           unless key == :type || key == :Id
             if value.is_a? Hash
@@ -160,11 +153,11 @@ module Salesforce
         end
         object.id = hash[:Id].first
         object
+        
+      rescue NameError # Class not yet implemented
+        return nil
       end
     
-      def table_name
-        name.split('::').last
-      end
     end
   
     
