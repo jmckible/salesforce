@@ -35,7 +35,7 @@ module Salesforce
       end
       
       def find_from_id(session, id)
-        find_every(session, :conditions=>"id = '#{id}'").first
+        find_every(session, :conditions=>"Id = '#{id}'").first
       end
       
       def find_initial(session, options)
@@ -70,21 +70,16 @@ module Salesforce
         
         on = options[:on] || :name
         column = columns.invert[on]
+        options.delete :on
         
-        if column.nil?
-          if options[:order] 
-            find session, :all, :order=>options[:order], :conditions=>options[:conditions]
-          else
-            find session, :all, :conditions=>options[:conditions]
-          end
+        options[:order] ||= on unless column.nil?
+        
+        if column.nil? || query.nil? || query == '' 
         else
-          order = options[:order] || on
-          if query.nil? || query == ''
-            find session, :all, :order=>order, :conditions=>options[:conditions]
-          else
-            find session, :all, :conditions=>[options[:conditions], "#{column} like '%#{query}%'"].compact.join(' and '), :order=>order
-          end
+          options[:conditions] = [options[:conditions], "#{column} LIKE '%#{query}%'"].compact.join(' AND ')
         end
+        
+        find session, :all, options
       end
       
       def process_response(query_response)
@@ -118,17 +113,17 @@ module Salesforce
         end
         
         conditions = options[:conditions]
-        base = "select #{cols} from #{table_name}"
-        base += " where #{conditions}" if conditions
+        base = "SELECT #{cols} FROM #{table_name}"
+        base += " WHERE #{conditions}" if conditions
         
         order = options[:order]
         if order
           if order.is_a? String
-            base += " order by #{order}"
+            base += " ORDER BY #{order}"
           else
             attribute = columns.invert[order]
             if attribute
-              base += " order by #{attribute.to_s}"
+              base += " ORDER BY #{attribute.to_s}"
             end
           end
         end
