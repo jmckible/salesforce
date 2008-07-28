@@ -76,7 +76,19 @@ module Salesforce
         
         if column.nil? || query.nil? || query == '' 
         else
-          options[:conditions] = [options[:conditions], "#{column} LIKE '%#{query}%'"].compact.join(' AND ')
+          options[:conditions] = [options[:conditions]] unless options[:conditions].is_a? Array
+          string = options[:conditions].shift
+          if string.is_a? String
+            string = string + " AND #{column} LIKE ?"
+          else
+            string = "#{column} LIKE ?"
+          end
+          
+          values = options[:conditions].dup
+          
+          options[:conditions] = [string]
+          values.each{|v| options[:conditions] << v}
+          options[:conditions] << "%#{query}%"
         end
         
         find session, :all, options
