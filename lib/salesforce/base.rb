@@ -112,9 +112,24 @@ module Salesforce
           end
         end
         
-        conditions = options[:conditions]
         base = "SELECT #{cols} FROM #{table_name}"
-        base += " WHERE #{conditions}" if conditions
+        
+        conditions = options[:conditions]
+        if conditions
+          if conditions.is_a? Array
+            string = conditions.shift
+            string.gsub! '?' do
+              value = conditions.shift
+              unless value.is_a? Integer
+                value.gsub! "'", "\'"
+                value = "'#{value}'"
+              end
+              value
+            end
+            conditions = string
+          end
+          base += " WHERE #{conditions}"
+        end
         
         order = options[:order]
         if order
