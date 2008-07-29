@@ -7,6 +7,11 @@ describe 'like query' do
     Salesforce::Account.like(nil, 'query')
   end
   
+  it 'should handle single quote' do
+    Salesforce::Account.should_receive(:find).with(nil, :all, :conditions=>["Name LIKE ?", "%quote'%"], :order=>:name)
+    Salesforce::Account.like(nil, "quote'")
+  end
+  
   it 'should overwrite the order by clause' do
     Salesforce::Lead.should_receive(:find).with(nil, :all, :conditions=>["Name LIKE ?", '%string%'], :order=>:first_name)
     Salesforce::Lead.like(nil, 'string', :order=>:first_name)

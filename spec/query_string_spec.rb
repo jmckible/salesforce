@@ -22,7 +22,8 @@ describe 'query string' do
   end
   
   it 'should escape conditions' do
-    Salesforce::Base.query_string(:conditions=>["?", "'"]).should == "SELECT Id FROM Base WHERE '\''"
+    Salesforce::Base.query_string(:conditions=>["?", "'"]).should == "SELECT Id FROM Base WHERE ''"
+    Salesforce::Account.query_string(:conditions=>["Name LIKE ?", "%quote'%"], :order=>:name).should == "SELECT Id, Name FROM Account WHERE Name LIKE '%quote%' ORDER BY Name"
   end
   
   it 'should ignore nil conditions' do
