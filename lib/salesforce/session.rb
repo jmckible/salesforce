@@ -12,7 +12,7 @@ module Salesforce
     end
     
     def campaign_members
-      CollectionProxy.new self, Salesforce::Campaign
+      CollectionProxy.new self, Salesforce::CampaignMember
     end
     
     def contacts
