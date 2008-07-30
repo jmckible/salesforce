@@ -133,7 +133,8 @@ module Salesforce
             string.gsub! '?' do
               value = conditions.shift
               unless value.is_a? Integer
-                value.gsub! "'", ""
+                value.gsub! "'", ''
+                value.gsub! /\\/, ''
                 value = "'#{value}'"
               end
               value
